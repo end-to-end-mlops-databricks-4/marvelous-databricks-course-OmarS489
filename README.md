@@ -36,6 +36,3 @@ uv venv -p 3.12 .venv
 source .venv/bin/activate
 uv sync --extra dev
 ```
-
-
-
