@@ -2,32 +2,18 @@
 
 import pandas as pd
 import pytest
+from databricks.connect import DatabricksSession
 from loguru import logger
 from pyspark.sql import SparkSession
 
 from house_price import PROJECT_DIR
 from house_price.config import ProjectConfig, Tags
-from tests.unit_tests.spark_config import spark_config
 
 
 @pytest.fixture(scope="session")
 def spark_session() -> SparkSession:
-    """Create and return a SparkSession for testing.
-
-    This fixture creates a SparkSession with the specified configuration and returns it for use in tests.
-    """
-    # One way
-    # spark = SparkSession.builder.getOrCreate()  # noqa
-    # Alternative way - better
-    spark = (
-        SparkSession.builder.master(spark_config.master)
-        .appName(spark_config.app_name)
-        .config("spark.executor.cores", spark_config.spark_executor_cores)
-        .config("spark.executor.instances", spark_config.spark_executor_instances)
-        .config("spark.sql.shuffle.partitions", spark_config.spark_sql_shuffle_partitions)
-        .config("spark.driver.bindAddress", spark_config.spark_driver_bindAddress)
-        .getOrCreate()
-    )
+    """Create and return a remote Databricks Spark session for tests."""
+    spark = DatabricksSession.builder.serverless().profile("dev").getOrCreate()
 
     yield spark
     spark.stop()

@@ -36,7 +36,6 @@ def test_dataprocessor_init(
     assert processor.df.equals(sample_data)
 
     assert isinstance(processor.config, ProjectConfig)
-    assert isinstance(processor.spark, SparkSession)
 
 
 def test_column_transformations(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession) -> None:
